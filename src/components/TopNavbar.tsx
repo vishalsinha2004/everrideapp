@@ -1,11 +1,22 @@
 import React from 'react';
-import { View, Text, StyleSheet, Platform, StatusBar, Animated, Image } from 'react-native';
+import { View, Text, StyleSheet, Platform, StatusBar, Animated, Image, Dimensions } from 'react-native';
 
 const COLORS = {
   navy: '#122C6F',
   gold: '#EDAB0C',
   // A slightly translucent version of your app's background color
   glassBg: 'rgba(248, 244, 237, 0.95)', 
+};
+
+// RESPONSIVE BREAKPOINTS
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const isSmallScreen = SCREEN_WIDTH < 375;
+const isMediumScreen = SCREEN_WIDTH >= 375 && SCREEN_WIDTH < 768;
+
+const getFontSize = (small: number, medium: number, large: number) => {
+  if (isSmallScreen) return small;
+  if (isMediumScreen) return medium;
+  return large;
 };
 
 // Accept scrollY as a prop from the parent screen
@@ -57,6 +68,9 @@ const styles = StyleSheet.create({
     // Allows the background to sit behind the content
     position: 'relative',
     zIndex: 100, // Keeps navbar above scrolling content
+    // --- ADDED WHITE BOTTOM LINE HERE ---
+    borderBottomWidth: 1,
+    borderBottomColor: '#FFFFFF',
   },
   glassBackground: {
     ...StyleSheet.absoluteFillObject,
@@ -67,17 +81,15 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 6,
     elevation: 4,
-    borderBottomWidth: 1,
-    borderColor: 'rgba(255,255,255,0.5)',
   },
   headerContent: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingBottom: 16,
+    paddingHorizontal: isSmallScreen ? 14 : isMediumScreen ? 16 : 20,
+    paddingBottom: isSmallScreen ? 12 : 16,
     // Safely handles Android notch/status bar spacing
-    paddingTop: Platform.OS === 'android' ? (StatusBar.currentHeight ? StatusBar.currentHeight + 10 : 30) : 10,
+    paddingTop: Platform.OS === 'android' ? (StatusBar.currentHeight ? StatusBar.currentHeight + 10 : 30) : 8,
   },
   brandContainer: {
     flex: 1,
@@ -86,20 +98,21 @@ const styles = StyleSheet.create({
     paddingRight: 10,
   },
   logo: {
-    width: 32,   // Adjust this size to fit your specific logo
-    height: 32,  // Adjust this size to fit your specific logo
-    marginRight: 8, // Adds breathing room between the logo and the text
+    width: isSmallScreen ? 28 : isMediumScreen ? 30 : 32,   // Adjust this size to fit your specific logo
+    height: isSmallScreen ? 28 : isMediumScreen ? 30 : 32,  // Adjust this size to fit your specific logo
+    marginRight: isSmallScreen ? 6 : 8, // Adds breathing room between the logo and the text
   },
   title: {
-    fontSize: 20,
+    fontSize: getFontSize(16, 18, 20),
     // Use the exact file name of the heaviest font weight you downloaded:
     fontFamily: 'Syne-Bold', 
     letterSpacing: -0.5,
+    fontWeight: '600',
   },
   avatar: {
-    width: 38,
-    height: 38,
-    borderRadius: 24,
+    width: isSmallScreen ? 34 : isMediumScreen ? 36 : 38,
+    height: isSmallScreen ? 34 : isMediumScreen ? 36 : 38,
+    borderRadius: isSmallScreen ? 17 : isMediumScreen ? 18 : 24,
     backgroundColor: COLORS.gold,
     justifyContent: 'center',
     alignItems: 'center',
@@ -110,8 +123,9 @@ const styles = StyleSheet.create({
     elevation: 8,                            
   },
   avatarText: {
-    fontSize: 18,
-    fontWeight: '900',
+    fontSize: getFontSize(14, 16, 18),
+    fontWeight: '600',
     color: "#000000",
+    fontFamily: 'Syne-Bold',
   },
 });

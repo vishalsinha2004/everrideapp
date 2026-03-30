@@ -1,11 +1,23 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Platform, Dimensions } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import Svg, { Path, Circle } from 'react-native-svg';
 
 const COLORS = {
   navy: '#122C6F',
   gold: '#EDAB0C',
   textGray: '#8A8D9F',
+};
+
+// RESPONSIVE BREAKPOINTS
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const isSmallScreen = SCREEN_WIDTH < 375;
+const isMediumScreen = SCREEN_WIDTH >= 375 && SCREEN_WIDTH < 768;
+
+const getFontSize = (small: number, medium: number, large: number) => {
+  if (isSmallScreen) return small;
+  if (isMediumScreen) return medium;
+  return large;
 };
 
 // Reusable SVG Icon Helper
@@ -45,8 +57,8 @@ const TabIcon = ({ name, active }: { name: string, active: boolean }) => {
 };
 
 // Reusable tab component
-const BottomTab = ({ label, active = false }: { label: string, active?: boolean }) => (
-  <TouchableOpacity style={styles.tabItem} activeOpacity={0.6}>
+const BottomTab = ({ label, onPress, active = false }: { label: string, onPress: () => void, active?: boolean }) => (
+  <TouchableOpacity style={styles.tabItem} activeOpacity={0.6} onPress={onPress}>
     <View style={styles.iconContainer}>
       <TabIcon name={label} active={active} />
     </View>
@@ -55,20 +67,22 @@ const BottomTab = ({ label, active = false }: { label: string, active?: boolean 
 );
 
 export default function BottomBar() {
+  const navigation = useNavigation();
+  const route = useRoute();
+
+  const handleNavigation = (screenName: string) => {
+    if (route.name !== screenName) {
+      navigation.navigate(screenName as never);
+    }
+  };
+
   return (
     <View style={styles.bottomNav}>
-      <BottomTab label="Home" active />
-      <BottomTab label="Services" />
+      <BottomTab label="Home" active={route.name === 'Home'} onPress={() => handleNavigation('Home')} />
+      <BottomTab label="Services" active={route.name === 'Services'} onPress={() => handleNavigation('Services')} />
       
-      {/* Prominent Middle Button */}
-      {/* <View style={styles.fastRidesWrapper}>
-        <TouchableOpacity style={styles.fastRidesBtn} activeOpacity={0.9}>
-          <Text style={styles.fastRidesText}>Fast{'\n'}Rides</Text>
-        </TouchableOpacity>
-      </View> */}
-      
-      <BottomTab label="Activity" />
-      <BottomTab label="Account" />
+      <BottomTab label="Activity" active={route.name === 'Activity'} onPress={() => handleNavigation('Activity')} />
+      <BottomTab label="Account" active={route.name === 'Account'} onPress={() => handleNavigation('Account')} />
     </View>
   );
 }
@@ -82,9 +96,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'flex-start',
-    paddingTop: 12,
-    paddingBottom: Platform.OS === 'ios' ? 34 : 12, // Protects the iOS swipe bar
-    backgroundColor: 'rgba(255, 255, 255, 0.95)', // Slightly more opaque so content doesn't bleed through heavily
+    paddingTop: isSmallScreen ? 10 : 12,
+    paddingBottom: Platform.OS === 'ios' ? 34 : (isSmallScreen ? 10 : 12),
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
     borderTopWidth: 1,
     borderColor: 'rgba(255, 255, 255, 1)',
     shadowColor: '#000',
@@ -95,18 +109,19 @@ const styles = StyleSheet.create({
   },
   tabItem: { 
     alignItems: 'center', 
-    width: 65 // Widened slightly to fit the word 'Activity'
+    width: isSmallScreen ? 60 : isMediumScreen ? 65 : 65
   },
   iconContainer: {
-    height: 26, // Gives the icons a consistent height boundary
+    height: isSmallScreen ? 22 : 26,
     justifyContent: 'center',
     alignItems: 'center',
   },
   tabLabel: { 
-    fontSize: 10, 
-    fontWeight: '700', 
+    fontSize: getFontSize(8, 9, 10), 
+    fontWeight: '500', 
     color: COLORS.textGray, 
-    marginTop: 4 
+    marginTop: isSmallScreen ? 2 : 4,
+    fontFamily: 'Poppins-Light',
   },
   tabLabelActive: { 
     color: COLORS.gold 
@@ -129,8 +144,8 @@ const styles = StyleSheet.create({
   },
   fastRidesText: { 
     color: '#fff', 
-    fontSize: 11, 
-    fontWeight: '800', 
+    fontSize: getFontSize(9, 10, 11), 
+    fontWeight: '600', 
     textAlign: 'center' 
   },
 });
