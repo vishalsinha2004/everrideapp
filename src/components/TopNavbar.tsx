@@ -32,14 +32,14 @@ export default function TopNavbar({ scrollY }: { scrollY?: Animated.Value }) {
         <View style={styles.brandContainer}>
           {/* THE LOGO */}
           <Image 
-            source={require('../assets/logo.png')} // <-- Place your logo.png in src/assets/ folder!
+            source={require('../../assets/logo.png')} // <-- Place your logo.png in src/assets/ folder!
             style={styles.logo}
             resizeMode="contain"
           />
           
           {/* THE DUAL-COLOR TEXT */}
           <Text style={styles.title} numberOfLines={1} adjustsFontSizeToFit>
-            <Text style={{ color: "#000000" }}>EVER</Text>
+            <Text style={{ color: COLORS.navy }}>EVER</Text>
             <Text style={{ color: COLORS.gold }}>RIDE</Text>
           </Text>
         </View>
@@ -91,14 +91,14 @@ const styles = StyleSheet.create({
     marginRight: 8, // Adds breathing room between the logo and the text
   },
   title: {
-    fontSize: 28,
-    fontWeight: '900',
+    fontSize: 20,
+    // Use the exact file name of the heaviest font weight you downloaded:
+    fontFamily: 'Syne-Bold', 
     letterSpacing: -0.5,
-    fontStyle:'italic',
   },
   avatar: {
-    width: 48,
-    height: 48,
+    width: 38,
+    height: 38,
     borderRadius: 24,
     backgroundColor: COLORS.gold,
     justifyContent: 'center',
@@ -110,8 +110,8 @@ const styles = StyleSheet.create({
     elevation: 8,                            
   },
   avatarText: {
-    fontSize: 20,
-    fontWeight: '800',
-    color: COLORS.navy,
+    fontSize: 18,
+    fontWeight: '900',
+    color: "#000000",
   },
 });
