@@ -11,9 +11,10 @@ import {
   Animated, 
   SafeAreaView, 
   StatusBar,
-  useWindowDimensions // <--- Added for true responsiveness
+  useWindowDimensions 
 } from 'react-native';
 import Svg, { Line, Polyline, Path, Rect } from 'react-native-svg';
+import LinearGradient from 'react-native-linear-gradient'; // <--- IMPORTED LINEAR GRADIENT
 
 const COLORS = { 
   cream: '#FBF8F2', 
@@ -21,7 +22,10 @@ const COLORS = {
   navy2: '#0E2255', 
   amber: '#EDAB0C', 
   cyan: '#1E9EC0', 
-  olive: '#5E8704' 
+  olive: '#5E8704',
+  // --- ADDED GRADIENT COLORS ---
+  gradientTop: '#F8F4ED', 
+  gradientBottom: '#E8DFD1'
 };
 
 // --- SVG ICONS ---
@@ -113,15 +117,17 @@ export default function OtpScreen({ navigation }: any) {
           
           <View style={styles.otpCenter}>
             <View style={styles.otpCenterIcon}>
-              {/* Professional SVG Lock Icon */}
               <LockIcon size={isSmallScreen ? 36 : 42} />
             </View>
             <Text style={[styles.otpCenterText, isSmallScreen && { fontSize: 12 }]}>OTP VERIFICATION</Text>
           </View>
         </View>
 
-        {/* BOTTOM SHEET */}
-        <View style={styles.authSheet}>
+        {/* BOTTOM SHEET - NOW USES LINEAR GRADIENT */}
+        <LinearGradient 
+          colors={[COLORS.gradientTop, COLORS.gradientBottom]} 
+          style={styles.authSheet}
+        >
           <ScrollView contentContainerStyle={{flexGrow:1, alignItems: 'center'}} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
             
             {/* Max width wrapper for large screens/tablets */}
@@ -141,7 +147,7 @@ export default function OtpScreen({ navigation }: any) {
                     ref={el => { refs.current[i] = el; }}
                     style={[
                       styles.otpC, 
-                      { width: OTP_BOX_WIDTH }, // Dynamically calculated width
+                      { width: OTP_BOX_WIDTH }, 
                       otp[i] ? styles.otpCFilled : null,
                       isSmallScreen && { height: 52, fontSize: 20 }
                     ]}
@@ -191,7 +197,7 @@ export default function OtpScreen({ navigation }: any) {
 
             </View>
           </ScrollView>
-        </View>
+        </LinearGradient>
 
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -203,7 +209,7 @@ const styles = StyleSheet.create({
   authWrap: { flex: 1, backgroundColor: COLORS.cream },
   
   // HERO SECTION
-  authHero: { height: 300, backgroundColor: COLORS.navy, borderBottomLeftRadius: 48, borderBottomRightRadius: 48, overflow: 'hidden', position: 'relative' },
+  authHero: { height: 300, backgroundColor: COLORS.navy, borderBottomLeftRadius: 0, borderBottomRightRadius: 0, overflow: 'hidden', position: 'relative' },
   ahBlob1: { position: 'absolute', width: 220, height: 220, borderRadius: 110, backgroundColor: 'rgba(255,255,255,0.06)', top: -60, right: -60 },
   ahBlob2: { position: 'absolute', width: 160, height: 160, borderRadius: 80, backgroundColor: 'rgba(30,158,192,0.2)', bottom: 20, left: -20 },
   
@@ -212,11 +218,25 @@ const styles = StyleSheet.create({
   authBtag: { fontFamily: 'Poppins-Medium', fontSize: 12, color: 'rgba(255,255,255,0.7)', marginTop: -2 },
   
   otpCenter: { position: 'absolute', bottom: 44, alignSelf: 'center', alignItems: 'center' },
-  otpCenterIcon: { marginBottom: 12 }, // Removed emoji styling, added margin for SVG
+  otpCenterIcon: { marginBottom: 12 }, 
   otpCenterText: { fontFamily: 'Poppins-Bold', fontSize: 13, color: 'rgba(255,255,255,0.7)', letterSpacing: 1.5 },
   
-  // BOTTOM SHEET
-  authSheet: { flex: 1, marginTop: -30, backgroundColor: 'white', borderTopLeftRadius: 32, borderTopRightRadius: 32, paddingTop: 36, paddingHorizontal: 28, shadowColor: '#000', shadowOffset: { width: 0, height: -4 }, shadowOpacity: 0.05, shadowRadius: 10, elevation: 5 },
+  // BOTTOM SHEET - Added borderTopWidth and borderTopColor for glass edge
+  authSheet: { 
+    flex: 1, 
+    marginTop: -30, 
+    borderTopLeftRadius: 32, 
+    borderTopRightRadius: 32, 
+    paddingTop: 36, 
+    paddingHorizontal: 28, 
+    shadowColor: '#000', 
+    shadowOffset: { width: 0, height: -4 }, 
+    shadowOpacity: 0.05, 
+    shadowRadius: 10, 
+    elevation: 5,
+    borderTopWidth: 1,
+    borderTopColor: '#FFFFFF'
+  },
   
   backRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 28 },
   backIco: { width: 44, height: 44, borderRadius: 16, borderWidth: 1.5, borderColor: '#E8E8E0', backgroundColor: COLORS.cream, alignItems: 'center', justifyContent: 'center', marginRight: 16 },
@@ -230,10 +250,9 @@ const styles = StyleSheet.create({
     borderRadius: 16, 
     backgroundColor: '#FAFAFA', 
     textAlign: 'center', 
-    fontFamily: 'Poppins-Bold', // Applied Poppins
+    fontFamily: 'Poppins-Bold', 
     fontSize: 24, 
     color: COLORS.navy2,
-    // Add vertical padding override for consistent centering on Android
     paddingVertical: 0
   },
   otpCFilled: { borderColor: COLORS.amber, backgroundColor: '#FFFBEE', color: COLORS.navy },

@@ -11,10 +11,13 @@ import {
   Platform 
 } from 'react-native';
 import Svg, { Path, Polyline, Line, Circle, Polygon } from 'react-native-svg';
+import LinearGradient from 'react-native-linear-gradient'; // <--- IMPORTED LINEAR GRADIENT
 
 const COLORS = {
   cream: '#FBF8F2', navy: '#122C6F', navy2: '#0E2255', amber: '#EDAB0C', amber2: '#FFC72C',
   cyan: '#1E9EC0', olive: '#5E8704', peach: '#FFC87D', peachDark: '#E68A00', darkBg: '#08101E',
+  // --- ADDED GRADIENT COLORS FROM HOME PAGE ---
+  gradientTop: '#F8F4ED', gradientBottom: '#E8DFD1', 
 };
 
 // 1. REPLACED EMOJIS WITH STRING IDs
@@ -144,11 +147,6 @@ export default function OnboardingScreen({ navigation }: any) {
           )}
         </View>
 
-        {/* Progress Bar */}
-        <View style={styles.obProgContainer}>
-          <View style={[styles.obProgFill, { width: `${(step / 5) * 100}%` }]} />
-        </View>
-
         {/* Visual Area */}
         <View style={styles.obVisual}>
           <View style={styles.gCircleOuter}>
@@ -174,8 +172,11 @@ export default function OnboardingScreen({ navigation }: any) {
           </Animated.View>
         </View>
 
-        {/* Bottom Card */}
-        <View style={[styles.obCard, isShortScreen && { height: 320, paddingBottom: 16 }]}>
+        {/* BOTTOM CARD NOW USES LINEAR GRADIENT */}
+        <LinearGradient 
+          colors={[COLORS.gradientTop, COLORS.gradientBottom]} 
+          style={[styles.obCard, isShortScreen && { height: 320, paddingBottom: 16 }]}
+        >
           <View style={styles.obCardInner}>
             <Text style={styles.obCounter}>0{step} / 05</Text>
             <Text style={[styles.obHeading, isSmallScreen && { fontSize: 26, lineHeight: 32 }]}>
@@ -197,7 +198,7 @@ export default function OnboardingScreen({ navigation }: any) {
               </TouchableOpacity>
             </View>
           </View>
-        </View>
+        </LinearGradient>
 
       </View>
     </SafeAreaView>
@@ -215,14 +216,11 @@ const styles = StyleSheet.create({
   },
   
   // POPPINS APPLIED TO ALL TEXT
-  obLogo: { fontFamily: 'Poppins-Black', fontSize: 16, letterSpacing: 2, color: 'rgba(255,255,255,0.9)' },
+  obLogo: { fontFamily: 'Syne-Bold', fontSize: 16, letterSpacing: 2, color: 'rgba(255,255,255,0.9)' },
   
   obBackBtn: { width: 40, height: 40, borderRadius: 14, backgroundColor: 'rgba(255,255,255,0.08)', borderColor: 'rgba(255,255,255,0.15)', borderWidth: 1, alignItems: 'center', justifyContent: 'center' },
   obSkipBtn: { backgroundColor: 'rgba(255,255,255,0.08)', borderColor: 'rgba(255,255,255,0.15)', borderWidth: 1, paddingVertical: 8, paddingHorizontal: 18, borderRadius: 20 },
   obSkipText: { color: 'rgba(255,255,255,0.9)', fontFamily: 'Poppins-SemiBold', fontSize: 13 },
-  
-  obProgContainer: { position: 'absolute', top: Platform.OS === 'android' ? 72 : 62, left: 24, right: 24, height: 3, backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: 3, overflow: 'hidden', zIndex: 10 },
-  obProgFill: { height: '100%', backgroundColor: '#EDAB0C', borderRadius: 3 },
   
   obVisual: { flex: 1, alignItems: 'center', justifyContent: 'center', marginBottom: 350 },
   
@@ -237,9 +235,10 @@ const styles = StyleSheet.create({
   fdot: { width: 8, height: 8, borderRadius: 4, marginRight: 6 },
   fbadgeText: { fontFamily: 'Poppins-SemiBold', fontSize: 12, color: 'white', marginTop: Platform.OS === 'android' ? 2 : 0 },
   
+  // REMOVED backgroundColor: '#FBF8F2' so the Gradient can show through perfectly!
   obCard: { 
     position: 'absolute', bottom: 0, left: 0, right: 0, height: 350, 
-    backgroundColor: '#FBF8F2', borderTopLeftRadius: 40, borderTopRightRadius: 40, 
+    borderTopLeftRadius: 40, borderTopRightRadius: 40, 
     shadowColor: '#000', shadowOffset: { width: 0, height: -10 }, shadowOpacity: 0.2, shadowRadius: 20, elevation: 20, 
     borderTopWidth: 1, borderTopColor: '#FFF' 
   },

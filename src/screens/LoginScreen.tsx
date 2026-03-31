@@ -13,8 +13,18 @@ import {
   useWindowDimensions
 } from 'react-native';
 import Svg, { Path, Circle, Rect, Polygon, Line } from 'react-native-svg';
+import LinearGradient from 'react-native-linear-gradient'; // <--- IMPORTED LINEAR GRADIENT
 
-const COLORS = { cream: '#FBF8F2', navy: '#122C6F', navy2: '#0E2255', cyan: '#1E9EC0', gold: '#EDAB0C' };
+const COLORS = { 
+  cream: '#FBF8F2', 
+  navy: '#122C6F', 
+  navy2: '#0E2255', 
+  cyan: '#1E9EC0', 
+  gold: '#EDAB0C',
+  // --- ADDED GRADIENT COLORS ---
+  gradientTop: '#F8F4ED', 
+  gradientBottom: '#E8DFD1'
+};
 
 // --- PROFESSIONAL SVG ICONS ---
 const TransportIcon = ({ id, color, size }: { id: string, color: string, size: number }) => {
@@ -114,7 +124,11 @@ export default function LoginScreen({ navigation }: any) {
           </View>
         </View>
 
-        <View style={styles.authSheet}>
+        {/* REPLACED WHITE VIEW WITH LINEAR GRADIENT */}
+        <LinearGradient 
+          colors={[COLORS.gradientTop, COLORS.gradientBottom]} 
+          style={styles.authSheet}
+        >
           <ScrollView contentContainerStyle={{flexGrow:1}} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
             
             {/* Centering wrapper for tablets/large screens */}
@@ -164,7 +178,7 @@ export default function LoginScreen({ navigation }: any) {
 
             </View>
           </ScrollView>
-        </View>
+        </LinearGradient>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -174,7 +188,7 @@ const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: COLORS.navy }, 
   authWrap: { flex: 1, backgroundColor: COLORS.cream },
   
-  authHero: { backgroundColor: COLORS.navy, borderBottomLeftRadius: 48, borderBottomRightRadius: 48, overflow: 'hidden', position: 'relative' },
+  authHero: { backgroundColor: COLORS.navy, borderBottomLeftRadius: 0, borderBottomRightRadius: 0, overflow: 'hidden', position: 'relative' },
   ahBlob1: { position: 'absolute', width: 220, height: 220, borderRadius: 110, backgroundColor: 'rgba(255,255,255,0.06)', top: -60, right: -60 },
   ahBlob2: { position: 'absolute', width: 160, height: 160, borderRadius: 80, backgroundColor: 'rgba(30,158,192,0.2)', bottom: 20, left: -20 },
   
@@ -190,7 +204,21 @@ const styles = StyleSheet.create({
   },
   achipText: { fontFamily: 'Poppins-SemiBold', fontSize: 12, color: 'white', marginLeft: 6, marginTop: Platform.OS === 'android' ? 2 : 0 },
   
-  authSheet: { flex: 1, marginTop: -30, backgroundColor: 'white', borderTopLeftRadius: 32, borderTopRightRadius: 32, paddingHorizontal: 28, shadowColor: '#000', shadowOffset: { width: 0, height: -4 }, shadowOpacity: 0.05, shadowRadius: 10, elevation: 5 },
+  // REMOVED backgroundColor: 'white' so the gradient works, and added the white top border!
+  authSheet: { 
+    flex: 1, 
+    marginTop: -30, 
+    borderTopLeftRadius: 32, 
+    borderTopRightRadius: 32, 
+    paddingHorizontal: 28, 
+    shadowColor: '#000', 
+    shadowOffset: { width: 0, height: -4 }, 
+    shadowOpacity: 0.05, 
+    shadowRadius: 10, 
+    elevation: 5,
+    borderTopWidth: 1, 
+    borderTopColor: '#FFFFFF' 
+  },
   
   shTitle: { fontFamily: 'Poppins-Black', fontSize: 28, color: COLORS.navy2, marginBottom: 4 },
   shSub: { fontFamily: 'Poppins-Regular', fontSize: 14, color: '#888', marginBottom: 28, lineHeight: 22 },
