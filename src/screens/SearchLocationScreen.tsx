@@ -69,10 +69,10 @@ const HeartIcon = () => (
 
 // --- MOCK RECENT LOCATIONS ---
 const RECENT_LOCATIONS = [
-    { id: '1', title: 'SHREYARTH UNIVERSITY', address: 'Ashram Road, Ellisbridge, Ahmedabad, Gujar...' },
-    { id: '2', title: 'Laxmi Bazar', address: 'Khadia, Ahmedabad, Gujarat 380002, India' },
-    { id: '3', title: '2/3015', address: 'near New Bus Stand, Dharmyug Colony, Gita...' },
-    { id: '4', title: 'M.J. Library BRTS Stop', address: 'Mahakavi Nhanalal Fly Overbridge, Ellisbridg...' },
+  { id: '1', title: 'SHREYARTH UNIVERSITY', address: 'Ashram Road, Ellisbridge, Ahmedabad, Gujar...' },
+  { id: '2', title: 'Laxmi Bazar', address: 'Khadia, Ahmedabad, Gujarat 380002, India' },
+  { id: '3', title: '2/3015', address: 'near New Bus Stand, Dharmyug Colony, Gita...' },
+  { id: '4', title: 'M.J. Library BRTS Stop', address: 'Mahakavi Nhanalal Fly Overbridge, Ellisbridg...' },
   { id: '5', title: 'A21', address: 'Saibaba Society, Sardarnagar, Hansol, Ahme...' },
   { id: '6', title: 'Kalupur Railway Station Rd', address: 'Sakar Bazzar, Kalupur, Ahmedabad, Gujarat ...' },
 ];
@@ -124,17 +124,21 @@ export default function SearchLocationScreen({ navigation }: any) {
             <View style={styles.inputColumn}>
               <TextInput
                 style={styles.inputField}
-                value="G-103 Sangani Platinum Narol" // <--- AUTOFILL PICKUP HERE
-                editable={false} // Usually disabled unless they want to change pickup
+                value="G-103 Sangani Platinum Narol" 
+                editable={false} 
               />
               <View style={styles.divider} />
+              
+              {/* --- FIXED: Added onSubmitEditing and returnKeyType --- */}
               <TextInput
                 ref={dropInputRef}
                 style={[styles.inputField, styles.inputActive]}
                 placeholder="Drop location"
                 placeholderTextColor={COLORS.textGray}
                 selectionColor={COLORS.navy}
-                defaultValue="Shreyarth University" // <--- AUTOFILL DROP HERE
+                defaultValue="Shreyarth University" 
+                returnKeyType="done"
+                onSubmitEditing={() => navigation.navigate('RideSelection')} 
               />
             </View>
           </View>

@@ -61,13 +61,7 @@ const CashIcon = () => (
   </Svg>
 );
 
-const OfferIcon = () => (
-  <Svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={COLORS.navy2} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <Circle cx="9" cy="9" r="2" />
-    <Circle cx="15" cy="15" r="2" />
-    <Line x1="19" y1="5" x2="5" y2="19" />
-  </Svg>
-);
+
 
 const ChevronRight = () => (
   <Svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={COLORS.navy2} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -129,16 +123,16 @@ const TransportIcon = ({ id, size, forceSvgColor }: { id: string, size: number, 
 
 // --- EXPANDED RIDE DATA ---
 const RIDE_OPTIONS = [
-  { id: 'bike', title: 'Bike', pax: 1, desc: 'Quick Bike rides', eta: '4 mins away', drop: 'Drop 3:15 pm', price: 78, isSurge: true },
-  { id: 'auto', title: 'Auto', pax: 3, desc: 'Affordable everyday transport', eta: '4 mins away', drop: 'Drop 3:17 pm', price: 135, isSurge: false },
-  { id: 'cab_eco', title: 'Cab Economy', pax: 4, desc: 'Standard door-to-door rides', eta: '5 mins away', drop: 'Drop 3:18 pm', price: 200, isSurge: false },
-  { id: 'bus', title: 'Bus', pax: 1, desc: 'Eco-friendly and affordable', eta: 'On time', drop: 'Drop 3:40 pm', price: 20, isSurge: false },
-  { id: 'multimode', title: 'Multimode', pax: 1, desc: 'Smart combo for best route', eta: 'Mixed', drop: 'Drop 3:25 pm', price: 44, isSurge: false },
+  { id: 'bike', title: 'Bike', pax: 1, desc: 'Quick Bike rides', eta: '4 mins away', drop: 'Drop 3:15 pm', price: 90, isSurge: true },
+  { id: 'auto', title: 'Auto', pax: 3, desc: 'Affordable everyday transport', eta: '4 mins away', drop: 'Drop 3:17 pm', price: 170, isSurge: false },
+  { id: 'cab_eco', title: 'Cab Economy', pax: 4, desc: 'Standard door-to-door rides', eta: '5 mins away', drop: 'Drop 3:18 pm', price: 210, isSurge: false },
+  // { id: 'bus', title: 'Bus', pax: 1, desc: 'Eco-friendly and affordable', eta: 'On time', drop: 'Drop 3:40 pm', price: 20, isSurge: false },
+  { id: 'multimode', title: 'Multimode', pax: 1, desc: 'Smart combo for best route', eta: 'Mixed', drop: 'Drop 3:25 pm', price: 50, isSurge: false },
 ];
 
 // --- MULTIMODE POPUP DATA (Added Prices) ---
 const MULTIMODE_LEGS = [
-  { id: 'leg1', type: 'auto', name: 'Auto', time: '10 min', start: 'G-103 Sanghani Platinum', end: 'Narol Chokadi BRTS', price: 24 },
+  { id: 'leg1', type: 'auto', name: 'Auto', time: '10 min', start: 'G-103 Sanghani Platinum', end: 'Narol Chokadi BRTS', price: 30 },
   { id: 'leg2', type: 'bus', name: 'Bus', time: '15 min', start: 'Narol Chokadi BRTS', end: 'M.J. Library BRTS', price: 20 },
   { id: 'leg3', type: 'walk', name: 'Walk', time: '2 min', start: 'M.J. Library BRTS', end: 'Final Destination', price: 0 }
 ];
@@ -167,8 +161,8 @@ const leafletHTML = `
         maxZoom: 19
       }).addTo(map);
 
-      var pickup = L.latLng(23.0260, 72.5750); 
-      var drop = L.latLng(23.0180, 72.5850);   
+      var pickup = L.latLng(23.0660, 72.5750); 
+      var drop = L.latLng(23.0180, 72.6000);   
 
       var pickupIcon = L.divIcon({ className: '', html: "<div style='background-color:#1E8E3E;width:14px;height:14px;border-radius:50%;border:3px solid white;box-shadow:0 2px 4px rgba(0,0,0,0.3);'></div>", iconSize: [20, 20], iconAnchor: [10, 10]});
       var dropIcon = L.divIcon({ className: '', html: "<div style='background-color:#D93025;width:14px;height:14px;border-radius:50%;border:3px solid white;box-shadow:0 2px 4px rgba(0,0,0,0.3);'></div>", iconSize: [20, 20], iconAnchor: [10, 10]});
@@ -300,7 +294,7 @@ export default function RideSelectionScreen({ navigation }: any) {
             <View style={styles.verticalDivider} />
 
             <TouchableOpacity style={styles.footerPill}>
-              <OfferIcon />
+              
               <Text style={styles.footerPillText}>% Offers</Text>
               <ChevronRight />
             </TouchableOpacity>
@@ -346,7 +340,7 @@ export default function RideSelectionScreen({ navigation }: any) {
             {/* Total Estimated Time & Price */}
             <View style={styles.modalSummary}>
               <Text style={styles.modalTotalTime}>Total: ~30 mins</Text>
-              <Text style={styles.modalTotalPrice}>₹44</Text>
+              <Text style={styles.modalTotalPrice}>₹50</Text>
             </View>
 
             {/* The Multi-Leg Timeline */}
