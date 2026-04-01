@@ -4,14 +4,15 @@ import {
   StyleSheet,
   Text,
   View,
-  TextInput,
   TouchableOpacity,
   SafeAreaView,
   Platform,
   ScrollView,
-  useWindowDimensions, // <--- Used for dynamic screen sizing
+  useWindowDimensions, 
   Animated,
+  Image, // <--- Added Image Import
 } from 'react-native';
+
 import LinearGradient from 'react-native-linear-gradient';
 import TopNavbar from '../components/TopNavbar'; 
 import BottomBar from '../components/BottomBar';
@@ -25,22 +26,44 @@ const COLORS = {
   textGray: '#8A8D9F',
 };
 
+// --- EXPANDED TO ALL 6 SERVICES ---
 const SERVICES = [
+  { id: 'cab', label: 'Cab', subtitle: 'Door to door', colors: ['rgba(255, 255, 255, 0.85)', 'rgba(245, 220, 175, 0.95)'], iconBg: '#EDAB0C' },
   { id: 'bus', label: 'Bus', subtitle: 'Eco-friendly', colors: ['rgba(255, 255, 255, 0.85)', 'rgba(215, 230, 195, 0.95)'], iconBg: '#5E8704' },
   { id: 'metro', label: 'Metro', subtitle: 'Fastest route', colors: ['rgba(255, 255, 255, 0.85)', 'rgba(205, 215, 235, 0.95)'], iconBg: '#122C6F' },
-  { id: 'cab', label: 'Cab', subtitle: 'Door to door', colors: ['rgba(255, 255, 255, 0.85)', 'rgba(245, 220, 175, 0.95)'], iconBg: '#EDAB0C' },
   { id: 'multimode', label: 'Multimode', subtitle: 'Smart combo', colors: ['rgba(255, 255, 255, 0.85)', 'rgba(190, 230, 235, 0.95)'], iconBg: '#1E9EC0' },
 ];
 
 const ServiceIcon = ({ id }: { id: string }) => {
-  const size = "26";
+  const svgSize = "26";
+  const imgSize = 34; // Slightly larger for PNG assets
   const color = "#FFFFFF"; 
   const strokeW = "2.2";
 
   switch (id) {
+    // PNG Assets for standard rides
+    case 'cab':
+       return (
+
+        <Svg width={svgSize} height={svgSize} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={strokeW} strokeLinecap="round" strokeLinejoin="round">
+
+          <Path d="M10 7V5h4v2" />
+
+          <Path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2" />
+
+          <Circle cx="7" cy="17" r="2" />
+
+          <Path d="M9 17h6" />
+
+          <Circle cx="17" cy="17" r="2" />
+
+        </Svg>
+
+      );
+    // SVGs for public transit options
     case 'bus':
       return (
-        <Svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={strokeW} strokeLinecap="round" strokeLinejoin="round">
+        <Svg width={svgSize} height={svgSize} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={strokeW} strokeLinecap="round" strokeLinejoin="round">
           <Path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6z" />
           <Path d="M4 11h16" />
           <Path d="M8 15h.01" />
@@ -51,7 +74,7 @@ const ServiceIcon = ({ id }: { id: string }) => {
       );
     case 'metro':
       return (
-        <Svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={strokeW} strokeLinecap="round" strokeLinejoin="round">
+        <Svg width={svgSize} height={svgSize} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={strokeW} strokeLinecap="round" strokeLinejoin="round">
           <Path d="M4 3h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" />
           <Path d="M4 11h16" />
           <Path d="M12 3v8" />
@@ -61,19 +84,9 @@ const ServiceIcon = ({ id }: { id: string }) => {
           <Path d="M16 15h.01" />
         </Svg>
       );
-    case 'cab':
-      return (
-        <Svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={strokeW} strokeLinecap="round" strokeLinejoin="round">
-          <Path d="M10 7V5h4v2" />
-          <Path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2" />
-          <Circle cx="7" cy="17" r="2" />
-          <Path d="M9 17h6" />
-          <Circle cx="17" cy="17" r="2" />
-        </Svg>
-      );
     case 'multimode':
       return (
-        <Svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={strokeW} strokeLinecap="round" strokeLinejoin="round">
+        <Svg width={svgSize} height={svgSize} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={strokeW} strokeLinecap="round" strokeLinejoin="round">
           <Path d="M16 3h5v5" />
           <Path d="M4 20L21 3" />
           <Path d="M21 16v5h-5" />
@@ -86,12 +99,11 @@ const ServiceIcon = ({ id }: { id: string }) => {
   }
 };
 
-export default function HomeScreen() {
+export default function HomeScreen({ navigation }: any) {
   const scrollY = useRef(new Animated.Value(0)).current;
 
   // --- RESPONSIVE MATH ---
   const { width: SCREEN_WIDTH } = useWindowDimensions();
-  // Capping the max width at 500 so cards don't look overly stretched on iPads/tablets
   const EFFECTIVE_WIDTH = Math.min(SCREEN_WIDTH, 500); 
   const HORIZONTAL_PADDING = 20;
   const CARD_GAP = 14;
@@ -115,11 +127,14 @@ export default function HomeScreen() {
             { useNativeDriver: false } 
           )}
         >
-          {/* Centering wrapper for large screens */}
           <View style={{ width: '100%', maxWidth: 500, alignSelf: 'center' }}>
             
-            {/* SEARCH BAR */}
-            <View style={styles.searchContainer}>
+            {/* UBER-STYLE CLICKABLE SEARCH BAR */}
+            <TouchableOpacity 
+              style={styles.searchContainer} 
+              activeOpacity={0.8}
+              onPress={() => navigation.navigate('SearchLocation')} 
+            >
               <Svg 
                 width="22" height="22" viewBox="0 0 24 24" 
                 fill="none" stroke={COLORS.navy} strokeWidth="2.5" 
@@ -130,13 +145,11 @@ export default function HomeScreen() {
                 <Circle cx="12" cy="10" r="3" />
               </Svg>
 
-              <TextInput
-                style={styles.input}
-                placeholder="Enter pickup location"
-                placeholderTextColor={COLORS.textGray}
-              />
+              <Text style={[styles.input, { color: COLORS.textGray, textAlignVertical: 'center', paddingTop: Platform.OS === 'ios' ? 12 : 0 }]}>
+                Where to?
+              </Text>
 
-              <TouchableOpacity style={styles.micButton} activeOpacity={0.8}>
+              <View style={styles.micButton}>
                 <Svg 
                   width="20" height="20" viewBox="0 0 24 24" 
                   fill="none" stroke="#000000" strokeWidth="2.5" 
@@ -147,8 +160,8 @@ export default function HomeScreen() {
                   <Line x1="12" y1="19" x2="12" y2="23" />
                   <Line x1="8" y1="23" x2="16" y2="23" />
                 </Svg>
-              </TouchableOpacity>
-            </View>
+              </View>
+            </TouchableOpacity>
 
             {/* OFFER CARD */}
             <View style={styles.offerCard}>
@@ -174,13 +187,14 @@ export default function HomeScreen() {
               </TouchableOpacity>
             </View>
 
-            {/* DYNAMIC 4-BOX GRID */}
+            {/* DYNAMIC GRID - NOW CLICKABLE & FILTERABLE */}
             <View style={styles.gridContainer}>
               {SERVICES.map((item) => (
                 <TouchableOpacity 
                   key={item.id} 
                   style={[styles.cardWrapper, { width: CARD_WIDTH, height: CARD_HEIGHT }]} 
                   activeOpacity={0.8}
+                  onPress={() => navigation.navigate('SearchLocation', { selectedFilter: item.id })} // Passes filter choice!
                 >
                   <LinearGradient 
                     colors={item.colors} 
@@ -208,7 +222,6 @@ export default function HomeScreen() {
             {/* SECONDARY CARD */}
             <TouchableOpacity style={styles.secondaryCard} activeOpacity={0.8}>
               <View style={styles.secondaryIconBox}>
-                {/* PROFESSIONAL SVG REPLACING EMOJI */}
                 <Svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={COLORS.navy} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                   <Path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                   <Circle cx="8.5" cy="7" r="4" />
@@ -228,7 +241,6 @@ export default function HomeScreen() {
         </ScrollView>
       </SafeAreaView>
 
-      {/* FIXED: Active tab string added */}
       <BottomBar  />
     </LinearGradient>
   );
@@ -252,7 +264,6 @@ const styles = StyleSheet.create({
   offerCard: { flexDirection: 'row', alignItems: 'flex-end', backgroundColor: '#122C6F', borderRadius: 24, padding: 20, marginBottom: 28, borderWidth: 1, overflow:'visible', shadowColor: COLORS.navy, shadowOffset: { width: 0, height: 14 }, shadowOpacity: 1, shadowRadius: 24, elevation: 20 },
   offerContent: { flex: 1 },
   
-  // SLIMMER FONT WEIGHTS
   offerLabel: { fontSize: 11, fontFamily: 'Poppins-SemiBold', color: COLORS.gold, letterSpacing: 1, marginBottom: 6 },
   offerTitle: { fontSize: 18, fontFamily: 'Poppins-Bold', color: '#ffffff', lineHeight: 26, marginBottom: 12 },
   
@@ -264,11 +275,9 @@ const styles = StyleSheet.create({
   
   sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 },
   
-  // SLIMMER FONT WEIGHTS
   sectionTitle: { fontSize: 20, fontFamily: 'Poppins-Bold', color: COLORS.navy },
   viewAll: { fontSize: 14, fontFamily: 'Poppins-Medium', color: COLORS.gold },
 
-  // REMOVED 'gap' to prevent crashes on older Androids. Used 'space-between' safely.
   gridContainer: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', gap: 14, marginBottom: 20 },
   
   cardWrapper: { backgroundColor: '#ffffff', borderRadius: 28, shadowColor: 'rgba(0, 0, 0, 0.63)', shadowOffset: { width: -6, height: 10 }, shadowOpacity: 0.12, shadowRadius: 14, elevation: 6 },
@@ -280,14 +289,12 @@ const styles = StyleSheet.create({
   
   cardBottomText: { marginTop: 10, alignItems: 'flex-start' },
   
-  // SLIMMER FIXED FONTS
   serviceLabel: { fontSize: 15, fontFamily: 'Poppins-Bold', color: COLORS.navy, marginBottom: 2, textAlign: 'left' },
   serviceSubtitle: { fontSize: 12, fontFamily: 'Poppins-Medium', opacity: 0.8, textAlign: 'left' },
   
   secondaryCard: { flexDirection: 'row', alignItems: 'center', backgroundColor: 'rgba(254, 248, 235, 0.85)', borderRadius: 24, padding: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,0.9)', shadowColor: '#E5D6B8', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.3, shadowRadius: 10, elevation: 3 },
   secondaryIconBox: { width: 52, height: 52, borderRadius: 18, backgroundColor: COLORS.gold, justifyContent: 'center', alignItems: 'center', marginRight: 16 },
   
-  // SLIMMER FIXED FONTS
   secondaryTitle: { fontSize: 15, fontFamily: 'Poppins-Bold', color: COLORS.navy, marginBottom: 4 },
   secondarySubtitle: { fontSize: 13, fontFamily: 'Poppins-Regular', color: COLORS.textGray },
 });

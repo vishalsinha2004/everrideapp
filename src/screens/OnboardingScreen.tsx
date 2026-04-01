@@ -11,12 +11,11 @@ import {
   Platform 
 } from 'react-native';
 import Svg, { Path, Polyline, Line, Circle, Polygon } from 'react-native-svg';
-import LinearGradient from 'react-native-linear-gradient'; // <--- IMPORTED LINEAR GRADIENT
+import LinearGradient from 'react-native-linear-gradient';
 
 const COLORS = {
   cream: '#FBF8F2', navy: '#122C6F', navy2: '#0E2255', amber: '#EDAB0C', amber2: '#FFC72C',
   cyan: '#1E9EC0', olive: '#5E8704', peach: '#FFC87D', peachDark: '#E68A00', darkBg: '#08101E',
-  // --- ADDED GRADIENT COLORS FROM HOME PAGE ---
   gradientTop: '#F8F4ED', gradientBottom: '#E8DFD1', 
 };
 
@@ -126,7 +125,8 @@ export default function OnboardingScreen({ navigation }: any) {
 
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: data.bgBase }]}>
-      <StatusBar barStyle="light-content" backgroundColor={data.bgBase} />
+      {/* FIXED: Made StatusBar translucent to prevent it from overlapping on Android */}
+      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent={true} />
       <View style={[styles.obWrap, { backgroundColor: data.bgBase }]}>
         
         {/* Decorative Background Blobs */}
@@ -206,13 +206,25 @@ export default function OnboardingScreen({ navigation }: any) {
 }
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1 },
+  // FIXED: Added dynamic paddingTop for Android to protect the safe area properly
+  safeArea: { 
+    flex: 1, 
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 
+  },
   obWrap: { flex: 1, position: 'relative' },
   blob: { position: 'absolute', width: 260, height: 260, borderRadius: 130, opacity: 0.25 },
   
+  // Adjusted top positioning to look perfect below the Safe Area padding we just added
   obTop: { 
-    position: 'absolute', top: Platform.OS === 'android' ? 20 : 10, left: 0, right: 0, 
-    paddingHorizontal: 24, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', zIndex: 10 
+    position: 'absolute', 
+    top: 16, 
+    left: 0, 
+    right: 0, 
+    paddingHorizontal: 24, 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    justifyContent: 'space-between', 
+    zIndex: 10 
   },
   
   // POPPINS APPLIED TO ALL TEXT
@@ -235,7 +247,6 @@ const styles = StyleSheet.create({
   fdot: { width: 8, height: 8, borderRadius: 4, marginRight: 6 },
   fbadgeText: { fontFamily: 'Poppins-SemiBold', fontSize: 12, color: 'white', marginTop: Platform.OS === 'android' ? 2 : 0 },
   
-  // REMOVED backgroundColor: '#FBF8F2' so the Gradient can show through perfectly!
   obCard: { 
     position: 'absolute', bottom: 0, left: 0, right: 0, height: 350, 
     borderTopLeftRadius: 40, borderTopRightRadius: 40, 

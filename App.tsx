@@ -9,6 +9,11 @@ import LoginScreen from './src/screens/LoginScreen';
 import OtpScreen from './src/screens/OtpScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import AccountScreen from './src/screens/AccountScreen';
+import ServicesScreen from './src/screens/ServicesScreen';
+import SearchLocationScreen from './src/screens/SearchLocationScreen';
+import RideSelectionScreen from './src/screens/RideSelectionScreen';
+import BookingScreen from './src/screens/BookingScreen';
+import ActivityScreen from './src/screens/ActivityScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -33,6 +38,11 @@ export default function App() {
           <Stack.Screen name="Otp" component={OtpScreen} />
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="Account" component={AccountScreen} />
+          <Stack.Screen name="Services" component={ServicesScreen} />
+          <Stack.Screen name="SearchLocation" component={SearchLocationScreen} />
+          <Stack.Screen name="RideSelection" component={RideSelectionScreen} />
+          <Stack.Screen name="Booking" component={BookingScreen} />
+          <Stack.Screen name="Activity" component={ActivityScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </>

@@ -13,7 +13,7 @@ import {
   useWindowDimensions
 } from 'react-native';
 import Svg, { Path, Circle, Rect, Polygon, Line } from 'react-native-svg';
-import LinearGradient from 'react-native-linear-gradient'; // <--- IMPORTED LINEAR GRADIENT
+import LinearGradient from 'react-native-linear-gradient';
 
 const COLORS = { 
   cream: '#FBF8F2', 
@@ -21,7 +21,6 @@ const COLORS = {
   navy2: '#0E2255', 
   cyan: '#1E9EC0', 
   gold: '#EDAB0C',
-  // --- ADDED GRADIENT COLORS ---
   gradientTop: '#F8F4ED', 
   gradientBottom: '#E8DFD1'
 };
@@ -101,7 +100,8 @@ export default function LoginScreen({ navigation }: any) {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle="light-content" backgroundColor={COLORS.navy} />
+      {/* FIXED: Made StatusBar translucent to correctly handle Safe Area */}
+      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent={true} />
       <KeyboardAvoidingView style={styles.authWrap} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         
         {/* RESPONSIVE HERO SECTION */}
@@ -124,14 +124,12 @@ export default function LoginScreen({ navigation }: any) {
           </View>
         </View>
 
-        {/* REPLACED WHITE VIEW WITH LINEAR GRADIENT */}
         <LinearGradient 
           colors={[COLORS.gradientTop, COLORS.gradientBottom]} 
           style={styles.authSheet}
         >
           <ScrollView contentContainerStyle={{flexGrow:1}} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
             
-            {/* Centering wrapper for tablets/large screens */}
             <View style={{ maxWidth: 500, width: '100%', alignSelf: 'center', paddingTop: isShortScreen ? 16 : 24 }}>
               <Text style={styles.shTitle}>Welcome!</Text>
               <Text style={styles.shSub}>Sign in or create your account{'\n'}to start riding smarter.</Text>
@@ -185,14 +183,20 @@ export default function LoginScreen({ navigation }: any) {
 }
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: COLORS.navy }, 
+  // FIXED: Added dynamic paddingTop for Android to protect the safe area perfectly
+  safeArea: { 
+    flex: 1, 
+    backgroundColor: COLORS.navy,
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 
+  }, 
   authWrap: { flex: 1, backgroundColor: COLORS.cream },
   
   authHero: { backgroundColor: COLORS.navy, borderBottomLeftRadius: 0, borderBottomRightRadius: 0, overflow: 'hidden', position: 'relative' },
   ahBlob1: { position: 'absolute', width: 220, height: 220, borderRadius: 110, backgroundColor: 'rgba(255,255,255,0.06)', top: -60, right: -60 },
   ahBlob2: { position: 'absolute', width: 160, height: 160, borderRadius: 80, backgroundColor: 'rgba(30,158,192,0.2)', bottom: 20, left: -20 },
   
-  authBrand: { position: 'absolute', top: Platform.OS === 'android' ? 40 : 56, left: 28, zIndex: 2 },
+  // FIXED: Removed arbitrary OS-specific top margin since SafeAreaView handles it now
+  authBrand: { position: 'absolute', top: 16, left: 28, zIndex: 2 },
   authBname: { fontFamily: 'Syne-Bold', fontSize: 20, letterSpacing: 2, color: 'white' },
   authBtag: { fontFamily: 'Poppins-Regular', fontSize: 13, color: 'rgba(255,255,255,0.7)', marginTop: 0 },
   
@@ -204,7 +208,6 @@ const styles = StyleSheet.create({
   },
   achipText: { fontFamily: 'Poppins-SemiBold', fontSize: 12, color: 'white', marginLeft: 6, marginTop: Platform.OS === 'android' ? 2 : 0 },
   
-  // REMOVED backgroundColor: 'white' so the gradient works, and added the white top border!
   authSheet: { 
     flex: 1, 
     marginTop: -30, 

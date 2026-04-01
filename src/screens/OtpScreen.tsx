@@ -14,7 +14,7 @@ import {
   useWindowDimensions 
 } from 'react-native';
 import Svg, { Line, Polyline, Path, Rect } from 'react-native-svg';
-import LinearGradient from 'react-native-linear-gradient'; // <--- IMPORTED LINEAR GRADIENT
+import LinearGradient from 'react-native-linear-gradient';
 
 const COLORS = { 
   cream: '#FBF8F2', 
@@ -23,7 +23,6 @@ const COLORS = {
   amber: '#EDAB0C', 
   cyan: '#1E9EC0', 
   olive: '#5E8704',
-  // --- ADDED GRADIENT COLORS ---
   gradientTop: '#F8F4ED', 
   gradientBottom: '#E8DFD1'
 };
@@ -103,7 +102,8 @@ export default function OtpScreen({ navigation }: any) {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle="light-content" backgroundColor={COLORS.navy} />
+      {/* FIXED: Made StatusBar translucent to correctly handle Safe Area */}
+      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent={true} />
       <KeyboardAvoidingView style={styles.authWrap} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         
         {/* HERO SECTION */}
@@ -205,7 +205,12 @@ export default function OtpScreen({ navigation }: any) {
 }
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: COLORS.navy },
+  // FIXED: Added dynamic paddingTop for Android to protect the safe area perfectly
+  safeArea: { 
+    flex: 1, 
+    backgroundColor: COLORS.navy,
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 
+  },
   authWrap: { flex: 1, backgroundColor: COLORS.cream },
   
   // HERO SECTION
@@ -213,7 +218,8 @@ const styles = StyleSheet.create({
   ahBlob1: { position: 'absolute', width: 220, height: 220, borderRadius: 110, backgroundColor: 'rgba(255,255,255,0.06)', top: -60, right: -60 },
   ahBlob2: { position: 'absolute', width: 160, height: 160, borderRadius: 80, backgroundColor: 'rgba(30,158,192,0.2)', bottom: 20, left: -20 },
   
-  authBrand: { position: 'absolute', top: 56, left: 28, zIndex: 2 },
+  // FIXED: Adjusted top positioning since the SafeAreaView is now handling the dynamic top spacing
+  authBrand: { position: 'absolute', top: 16, left: 28, zIndex: 2 },
   authBname: { fontFamily: 'Syne-Bold', fontSize: 18, letterSpacing: 3, color: 'white' },
   authBtag: { fontFamily: 'Poppins-Medium', fontSize: 12, color: 'rgba(255,255,255,0.7)', marginTop: -2 },
   
@@ -221,7 +227,6 @@ const styles = StyleSheet.create({
   otpCenterIcon: { marginBottom: 12 }, 
   otpCenterText: { fontFamily: 'Poppins-Bold', fontSize: 13, color: 'rgba(255,255,255,0.7)', letterSpacing: 1.5 },
   
-  // BOTTOM SHEET - Added borderTopWidth and borderTopColor for glass edge
   authSheet: { 
     flex: 1, 
     marginTop: -30, 
