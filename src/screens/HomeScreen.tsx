@@ -10,13 +10,14 @@ import {
   ScrollView,
   useWindowDimensions, 
   Animated,
-  Image, // <--- Added Image Import
+  Image,
 } from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient';
 import TopNavbar from '../components/TopNavbar'; 
 import BottomBar from '../components/BottomBar';
-import Svg, { Path, Circle, Line } from 'react-native-svg';
+import BannerCarousel from '../components/BannerCarousel'; // <--- NEW COMPONENT IMPORTED HERE
+import Svg, { Path, Circle, Line, Rect } from 'react-native-svg';
 
 const COLORS = {
   gradientTop: '#F8F4ED',
@@ -26,7 +27,7 @@ const COLORS = {
   textGray: '#8A8D9F',
 };
 
-// --- EXPANDED TO ALL 6 SERVICES ---
+// --- DATA ---
 const SERVICES = [
   { id: 'cab', label: 'Cab', subtitle: 'Door to door', colors: ['rgba(255, 255, 255, 0.85)', 'rgba(245, 220, 175, 0.95)'], iconBg: '#EDAB0C' },
   { id: 'bus', label: 'Bus', subtitle: 'Eco-friendly', colors: ['rgba(255, 255, 255, 0.85)', 'rgba(215, 230, 195, 0.95)'], iconBg: '#5E8704' },
@@ -34,56 +35,39 @@ const SERVICES = [
   { id: 'multimode', label: 'Multimode', subtitle: 'Smart combo', colors: ['rgba(255, 255, 255, 0.85)', 'rgba(190, 230, 235, 0.95)'], iconBg: '#1E9EC0' },
 ];
 
+// --- PURE SVG ICONS FOR ALL VEHICLES ---
 const ServiceIcon = ({ id }: { id: string }) => {
   const svgSize = "26";
-  const imgSize = 34; // Slightly larger for PNG assets
   const color = "#FFFFFF"; 
   const strokeW = "2.2";
 
   switch (id) {
-    // PNG Assets for standard rides
+   
     case 'cab':
-       return (
-
-        <Svg width={svgSize} height={svgSize} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={strokeW} strokeLinecap="round" strokeLinejoin="round">
-
-          <Path d="M10 7V5h4v2" />
-
-          <Path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2" />
-
-          <Circle cx="7" cy="17" r="2" />
-
-          <Path d="M9 17h6" />
-
-          <Circle cx="17" cy="17" r="2" />
-
-        </Svg>
-
-      );
-    // SVGs for public transit options
+      return (
+                      <Image
+                          source={require('../../assets/cab_icon.png')}
+                          style={{ width: 50, height: 50 }}
+                          resizeMode="contain"
+                      />
+                  );
+    
     case 'bus':
       return (
-        <Svg width={svgSize} height={svgSize} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={strokeW} strokeLinecap="round" strokeLinejoin="round">
-          <Path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6z" />
-          <Path d="M4 11h16" />
-          <Path d="M8 15h.01" />
-          <Path d="M16 15h.01" />
-          <Path d="M6 18v2" />
-          <Path d="M18 18v2" />
-        </Svg>
-      );
+                      <Image
+                          source={require('../../assets/bus_icon.png')}
+                          style={{ width: 50, height: 50 }}
+                          resizeMode="contain"
+                      />
+                  );
     case 'metro':
       return (
-        <Svg width={svgSize} height={svgSize} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={strokeW} strokeLinecap="round" strokeLinejoin="round">
-          <Path d="M4 3h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" />
-          <Path d="M4 11h16" />
-          <Path d="M12 3v8" />
-          <Path d="M8 19l-2 3" />
-          <Path d="M16 19l2 3" />
-          <Path d="M8 15h.01" />
-          <Path d="M16 15h.01" />
-        </Svg>
-      );
+                      <Image
+                          source={require('../../assets/metro_icon.png')}
+                          style={{ width: 50, height: 50 }}
+                          resizeMode="contain"
+                      />
+                  );
     case 'multimode':
       return (
         <Svg width={svgSize} height={svgSize} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={strokeW} strokeLinecap="round" strokeLinejoin="round">
@@ -163,22 +147,13 @@ export default function HomeScreen({ navigation }: any) {
               </View>
             </TouchableOpacity>
 
-            {/* OFFER CARD */}
-            <View style={styles.offerCard}>
-              <View style={styles.offerContent}>
-                <Text style={styles.offerLabel}>OUR ADS & OFFERS</Text>
-                <Text style={styles.offerTitle}>Get 30% off your{'\n'}first Metro ride 🚇</Text>
-                <View style={styles.dotsRow}>
-                  <View style={[styles.dot, styles.dotActive]} />
-                  <View style={styles.dot} />
-                  <View style={styles.dot} />
-                </View>
-              </View>
-              <TouchableOpacity style={styles.claimBtn} activeOpacity={0.8}>
-                <Text style={styles.claimBtnText}>CLAIM NOW</Text>
-              </TouchableOpacity>
-            </View>
+          </View>
 
+          {/* AUTO-SCROLLING BANNERS COMPONENT */}
+          <BannerCarousel screenWidth={SCREEN_WIDTH} />
+
+          <View style={{ width: '100%', maxWidth: 500, alignSelf: 'center' }}>
+            
             {/* SERVICES HEADER */}
             <View style={styles.sectionHeader}>
               <Text style={styles.sectionTitle}>Our Services</Text>
@@ -194,7 +169,7 @@ export default function HomeScreen({ navigation }: any) {
                   key={item.id} 
                   style={[styles.cardWrapper, { width: CARD_WIDTH, height: CARD_HEIGHT }]} 
                   activeOpacity={0.8}
-                  onPress={() => navigation.navigate('SearchLocation', { selectedFilter: item.id })} // Passes filter choice!
+                  onPress={() => navigation.navigate('SearchLocation', { selectedFilter: item.id })}
                 >
                   <LinearGradient 
                     colors={item.colors} 
@@ -251,34 +226,21 @@ const styles = StyleSheet.create({
   safeArea: { flex: 1 },
   
   scrollContent: {
-    paddingHorizontal: 20, 
     paddingTop: 10, 
   },
 
-  searchContainer: { flexDirection: 'row', alignItems: 'center', backgroundColor: 'rgba(255, 255, 255, 0.8)', borderRadius: 24, padding: 8, paddingLeft: 16, marginBottom: 24, borderWidth: 1, borderColor: '#FFFFFF', shadowColor: '#d1d5db', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.15, shadowRadius: 10, elevation: 2 },
+  searchContainer: { marginHorizontal: 20, flexDirection: 'row', alignItems: 'center', backgroundColor: 'rgba(255, 255, 255, 0.8)', borderRadius: 24, padding: 8, paddingLeft: 16, marginBottom: 24, borderWidth: 1, borderColor: '#FFFFFF', shadowColor: '#d1d5db', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.15, shadowRadius: 10, elevation: 2 },
   
   input: { flex: 1, height: 44, fontSize: 16, color: COLORS.navy, fontFamily: 'Poppins-Regular', marginTop: Platform.OS === 'android' ? 4 : 0 }, 
   
   micButton: { width: 44, height: 44, borderRadius: 22, backgroundColor: COLORS.gold, justifyContent: 'center', alignItems: 'center' },
   
-  offerCard: { flexDirection: 'row', alignItems: 'flex-end', backgroundColor: '#122C6F', borderRadius: 24, padding: 20, marginBottom: 28, borderWidth: 1, overflow:'visible', shadowColor: COLORS.navy, shadowOffset: { width: 0, height: 14 }, shadowOpacity: 1, shadowRadius: 24, elevation: 20 },
-  offerContent: { flex: 1 },
-  
-  offerLabel: { fontSize: 11, fontFamily: 'Poppins-SemiBold', color: COLORS.gold, letterSpacing: 1, marginBottom: 6 },
-  offerTitle: { fontSize: 18, fontFamily: 'Poppins-Bold', color: '#ffffff', lineHeight: 26, marginBottom: 12 },
-  
-  dotsRow: { flexDirection: 'row', alignItems: 'center' },
-  dot: { width: 6, height: 6, borderRadius: 3, backgroundColor: 'rgba(244, 176, 0, 0.3)', marginRight: 6 },
-  dotActive: { width: 16, backgroundColor: COLORS.gold },
-  claimBtn: { backgroundColor: COLORS.gold, borderRadius: 16, paddingVertical: 12, paddingHorizontal: 16, shadowColor: COLORS.gold, shadowOffset: { width: 0, height: 0 }, shadowOpacity: 1, shadowRadius: 17, elevation: 17 },
-  claimBtnText: { color: '#000000', fontFamily: 'Poppins-SemiBold', fontSize: 12 },
-  
-  sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 },
+  sectionHeader: { marginHorizontal: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 },
   
   sectionTitle: { fontSize: 20, fontFamily: 'Poppins-Bold', color: COLORS.navy },
   viewAll: { fontSize: 14, fontFamily: 'Poppins-Medium', color: COLORS.gold },
 
-  gridContainer: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', gap: 14, marginBottom: 20 },
+  gridContainer: { marginHorizontal: 20, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', gap: 14, marginBottom: 20 },
   
   cardWrapper: { backgroundColor: '#ffffff', borderRadius: 28, shadowColor: 'rgba(0, 0, 0, 0.63)', shadowOffset: { width: -6, height: 10 }, shadowOpacity: 0.12, shadowRadius: 14, elevation: 6 },
   serviceCard: { flex: 1, borderRadius: 28, padding: 18, justifyContent: 'space-between', borderWidth: 1.5, borderColor: 'rgba(255, 255, 255, 0.9)', borderBottomWidth: 0.5, borderRightWidth: 0.5 },
@@ -292,7 +254,7 @@ const styles = StyleSheet.create({
   serviceLabel: { fontSize: 15, fontFamily: 'Poppins-Bold', color: COLORS.navy, marginBottom: 2, textAlign: 'left' },
   serviceSubtitle: { fontSize: 12, fontFamily: 'Poppins-Medium', opacity: 0.8, textAlign: 'left' },
   
-  secondaryCard: { flexDirection: 'row', alignItems: 'center', backgroundColor: 'rgba(254, 248, 235, 0.85)', borderRadius: 24, padding: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,0.9)', shadowColor: '#E5D6B8', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.3, shadowRadius: 10, elevation: 3 },
+  secondaryCard: { marginHorizontal: 20, flexDirection: 'row', alignItems: 'center', backgroundColor: 'rgba(254, 248, 235, 0.85)', borderRadius: 24, padding: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,0.9)', shadowColor: '#E5D6B8', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.3, shadowRadius: 10, elevation: 3 },
   secondaryIconBox: { width: 52, height: 52, borderRadius: 18, backgroundColor: COLORS.gold, justifyContent: 'center', alignItems: 'center', marginRight: 16 },
   
   secondaryTitle: { fontSize: 15, fontFamily: 'Poppins-Bold', color: COLORS.navy, marginBottom: 4 },
